@@ -123,7 +123,7 @@ class Net(nn.Module):
 
 class NETS6(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(NETS6, self).__init__()
         # Input Block
         self.convblock1 = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=8, kernel_size=(3, 3), padding=0, bias=False),
