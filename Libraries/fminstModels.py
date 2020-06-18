@@ -311,3 +311,80 @@ def test():
     y = net(torch.randn(1,3,32,32))
     print(y.size())
 
+
+class newResnet(nn.Module):
+    def __init__(self):
+        super(newResnet, self).__init__()
+
+        self.PrepLayer = nn.Sequential(
+          nn.Conv2d(1, 64, 3,padding=1),
+          nn.ReLU(),
+          nn.BatchNorm2d(64),      
+        )
+
+        self.layer1convblock1 = nn.Sequential(
+          nn.Conv2d(64, 128, 3,padding=1),
+          nn.MaxPool2d(2, 2),
+          nn.ReLU(),
+          nn.BatchNorm2d(128),   
+        )
+
+        self.resnet1 = nn.Sequential(
+          nn.Conv2d(128, 128, 3,padding=1),
+          nn.BatchNorm2d(128),
+          nn.ReLU(),
+          nn.Conv2d(128, 128, 3,padding=1),
+          nn.BatchNorm2d(128),
+          nn.ReLU(),
+        )
+
+        self.layer2convblock2 = nn.Sequential(
+            nn.Conv2d(128, 256, 3,padding=1),
+            nn.MaxPool2d(2, 2),
+            nn.ReLU(),
+            nn.BatchNorm2d(256),    
+        )
+       
+        self.layer3convblock3 = nn.Sequential(
+          nn.Conv2d(256, 512, 3,padding=1),
+          nn.MaxPool2d(2, 2),
+          nn.ReLU(),
+          nn.BatchNorm2d(512),    
+        )
+
+        self.resnet3 = nn.Sequential(
+          nn.Conv2d(512, 512, 3,padding=1),
+          nn.BatchNorm2d(512),
+          nn.ReLU(),
+          nn.Conv2d(512, 512, 3,padding=1),
+          nn.BatchNorm2d(512),
+          nn.ReLU(),
+        )
+        
+        self.pool1 = nn.MaxPool2d(4, 1)
+
+
+        self.fc = nn.Sequential(
+            nn.Conv2d(in_channels=512, out_channels=10, kernel_size=(1, 1), padding=0, bias=False)
+        ) 
+
+
+    def forward(self, x):
+      
+        x = self.PrepLayer(x)
+
+        x = self.layer1convblock1(x)
+        r1 = self.resnet1(x)
+        x = torch.add(x, r1)
+
+        x = self.layer2convblock2(x)
+
+        x = self.layer3convblock3(x)
+        r3 = self.resnet3(x)
+        x = torch.add(x, r3)
+
+        x = self.pool1(x) 
+  
+        x = self.fc(x)
+        x = x.view(-1, 10)
+        return F.log_softmax(x, dim=-1)
