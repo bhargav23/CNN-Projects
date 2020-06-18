@@ -383,7 +383,7 @@ class newResnet(nn.Module):
         #r3 = self.resnet3(x)
         #x = torch.add(x, r3)
 
-        x = self.pool1(x) 
+        #x = self.pool1(x) 
   
         x = self.fc(x)
         x = x.view(-1, 10)
