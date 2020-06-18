@@ -344,7 +344,7 @@ class newResnet(nn.Module):
             nn.ReLU(),
             nn.BatchNorm2d(256),    
         )
-       '''
+
         self.layer3convblock3 = nn.Sequential(
           nn.Conv2d(256, 512, 3,padding=1),
           nn.MaxPool2d(2, 2),
@@ -362,7 +362,7 @@ class newResnet(nn.Module):
         )
         
         self.pool1 = nn.MaxPool2d(4, 1)
-	'''
+
 
         self.fc = nn.Sequential(
             nn.Conv2d(in_channels=512, out_channels=10, kernel_size=(1, 1), padding=0, bias=False)
